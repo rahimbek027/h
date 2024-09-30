@@ -1,35 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useContext, useState } from 'react';
+import './App.css';
+import Dashboard from './routes/DashboardRoutes';
+import LoginRoutes from './routes/LoginRoutes';
+import { Context } from './context/Index';
+import Feed from './pages/Feed'; // Feed komponentini import qilish
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { token } = useContext(Context);
+  const [tweets, setTweets] = useState([]); // Tweetlar uchun holat
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  const addTweet = (newTweet) => {
+    setTweets((prevTweets) => [...prevTweets, newTweet]); // Yangi tweetni qo'shish
+  };
+
+  if (token) {
+    return (
+      <Dashboard>
+        <Feed addTweet={addTweet} tweets={tweets} /> {/* Feed komponentini chaqirish */}
+      </Dashboard>
+    );
+  } else {
+    return <LoginRoutes />;
+  }
 }
 
-export default App
+export default App;
